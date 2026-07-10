@@ -1,0 +1,57 @@
+name: Update routes
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */4 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-routes
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.87.0
+        with:
+          components: clippy,rustfmt
+
+      - name: Restore Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Verify publisher
+        run: |
+          cargo fmt --all -- --check
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+
+      - name: Publish encrypted routes
+        env:
+          SUBSCRIPTION_URL: ${{ secrets.UPSTREAM_SUBSCRIPTION_URL }}
+          ROUTE_ENCRYPTION_KEY_B64: ${{ secrets.ROUTE_ENCRYPTION_KEY_B64 }}
+          ROUTE_SIGNING_KEY_PEM: ${{ secrets.ROUTE_SIGNING_KEY_PEM }}
+          ROUTE_KEY_ID: v1
+          ROUTE_OUTPUT_DIRECTORY: public
+          ROUTE_BUNDLE_LIFETIME_HOURS: "72"
+        run: cargo run --locked --release
+
+      - name: Commit route update
+        run: |
+          if git diff --quiet -- public; then
+            echo "No route changes"
+            exit 0
+          fi
+          git config user.name "wocao-hub-routes[bot]"
+          git config user.email "wocao-hub-routes[bot]@users.noreply.github.com"
+          git add public/manifest.json public/routes.enc public/routes.sig public/.gitkeep
+          git commit -m "Update encrypted routes"
+          git push
