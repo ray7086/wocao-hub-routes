@@ -1,0 +1,12 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+target/
+tmp/
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+public/*.tmp
