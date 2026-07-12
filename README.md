@@ -25,13 +25,16 @@ public/
 2. 使用 XChaCha20-Poly1305 加密订阅正文。
 3. 生成带版本、有效期和 SHA-256 的 `manifest.json`。
 4. 使用 Ed25519 私钥签名清单。
-5. 仅提交 `public/` 下的公开产物。
+5. 仅提交 `public/` 下的公开产物，并同步到 Gitee。
+
+客户端优先访问 Gitee，网络错误、超时或 `5xx` 时备用访问 GitHub；两边使用相同的 Ed25519 签名和密文哈希。
 
 需要在仓库 Actions Secrets 中配置：
 
 - `UPSTREAM_SUBSCRIPTION_URL`
 - `ROUTE_ENCRYPTION_KEY_B64`
 - `ROUTE_SIGNING_KEY_PEM`
+- `GITEE_TOKEN`
 
 私钥、原始订阅地址和解密密钥不得提交到 Git。本仓库公开的加密只能阻止直接浏览，不能对拥有官方客户端二进制的人员提供绝对保密。
 
