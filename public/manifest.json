@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "20260930053837-f5a4b519797b",
-  "generatedAt": "2026-09-30T05:38:37.890896112Z",
-  "expiresAt": "2026-10-03T05:38:37.890896112Z",
+  "version": "20260930145747-f3ef0cf927dc",
+  "generatedAt": "2026-09-30T14:57:47.007448246Z",
+  "expiresAt": "2026-10-03T14:57:47.007448246Z",
   "routeFile": "routes.enc",
-  "routeSha256": "f5a4b519797b301648cab1ced66896fd79121c2208a4bc5672beec1c1eb6d070",
+  "routeSha256": "f3ef0cf927dce9bc36930df30fd25dfe8e02dd05f70af161b33be39d22dd920d",
   "routeSize": 21948,
   "encryption": "xchacha20poly1305",
   "keyId": "v1"
